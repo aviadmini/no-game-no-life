@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_main_padding"
+    tools:context=".MainActivity"
+    >
+
+    <!-- Not the best layout ever, but works-->
+
+    <TextView
+        android:id="@+id/activity_main_tv_step"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activity_main_tv_step_text"
+        />
+
+    <com.aviadmini.nogamenolife.views.LifeDrawView
+        android:id="@+id/activity_main_life"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/activity_main_life_margin_bottom"
+        android:keepScreenOn="true"
+        app:lifeHeight="@integer/life_size"
+        app:lifeWidth="@integer/life_size"
+        />
+
+    <TextView
+        android:id="@+id/activity_main_tv_delay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activity_main_tv_delay_text"
+        />
+
+    <SeekBar
+        android:id="@+id/activity_main_seek_speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="1480"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/activity_main_btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="btnClick"
+            android:text="@string/activity_main_btn_next_text"
+            />
+
+        <Button
+            android:id="@+id/activity_main_btn_start_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="btnClick"
+            android:text="@string/activity_main_btn_start_text"
+            />
+
+        <Button
+            android:id="@+id/activity_main_btn_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="btnClick"
+            android:text="@string/activity_main_btn_clear_text"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

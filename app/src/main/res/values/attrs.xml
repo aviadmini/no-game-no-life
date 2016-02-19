@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="LifeDrawView">
+
+        <!-- -->
+
+        <attr name="lifeWidth"
+              format="integer"/>
+
+        <attr name="lifeHeight"
+              format="integer"/>
+
+        <!-- -->
+
+    </declare-styleable>
+
+</resources>
