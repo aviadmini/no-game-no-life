@@ -10,12 +10,14 @@ public class LifeComputeJava
     protected final int[] mCellStatesPing;
     protected final int[] mCellStatesPong;
 
+    private LifeCompute mOtherCompute;
+
     protected boolean mUsingPing;
 
     private int mStep = 0;
 
-    public LifeComputeJava(final int pWidth, final int pHeight) {
-        super(pWidth, pHeight);
+    public LifeComputeJava(final int pWidth, final int pHeight, final Callback pCallback) {
+        super(pWidth, pHeight, pCallback);
 
         this.mCellStatesSize = pWidth * pHeight;
 
@@ -31,10 +33,11 @@ public class LifeComputeJava
     public LifeComputeJava(@NonNull final LifeCompute pOther) {
         super(pOther);
 
-        this.mCellStatesPing = pOther.getCellStates();
+        this.mOtherCompute = pOther;
 
-        this.mCellStatesSize = this.mCellStatesPing.length;
+        this.mCellStatesSize = pOther.getWidth() * pOther.getHeight();
 
+        this.mCellStatesPing = new int[this.mCellStatesSize];
         this.mCellStatesPong = new int[this.mCellStatesSize];
 
         this.mUsingPing = true;
@@ -42,7 +45,24 @@ public class LifeComputeJava
     }
 
     @Override
-    public synchronized void tick() {
+    protected void init() {
+
+        if (this.mOtherCompute != null) {
+
+            final int[] cellStates = this.mOtherCompute.getCachedCellStates();
+
+            if (cellStates != null) {
+                System.arraycopy(cellStates, 0, this.mCellStatesPing, 0, this.mCellStatesSize);
+            }
+
+            this.mOtherCompute = null;
+
+        }
+
+    }
+
+    @Override
+    protected synchronized void tickInternal() {
 
         // Definitely not the most efficient algorithm ever
 
@@ -55,17 +75,17 @@ public class LifeComputeJava
 
             int aliveCellsNearby = 0;
 
-            aliveCellsNearby += this.getNeighbourCellState(i + 1);
-            aliveCellsNearby += this.getNeighbourCellState(i - 1);
+            aliveCellsNearby += this.getAddFromNeighbour(i + 1);
+            aliveCellsNearby += this.getAddFromNeighbour(i - 1);
 
-            aliveCellsNearby += this.getNeighbourCellState(i + this.mWidth);
-            aliveCellsNearby += this.getNeighbourCellState(i - this.mWidth);
+            aliveCellsNearby += this.getAddFromNeighbour(i + this.getWidth());
+            aliveCellsNearby += this.getAddFromNeighbour(i - this.getWidth());
 
-            aliveCellsNearby += this.getNeighbourCellState(i - this.mWidth + 1);
-            aliveCellsNearby += this.getNeighbourCellState(i - this.mWidth - 1);
+            aliveCellsNearby += this.getAddFromNeighbour(i - this.getWidth() + 1);
+            aliveCellsNearby += this.getAddFromNeighbour(i - this.getWidth() - 1);
 
-            aliveCellsNearby += this.getNeighbourCellState(i + this.mWidth + 1);
-            aliveCellsNearby += this.getNeighbourCellState(i + this.mWidth - 1);
+            aliveCellsNearby += this.getAddFromNeighbour(i + this.getWidth() + 1);
+            aliveCellsNearby += this.getAddFromNeighbour(i + this.getWidth() - 1);
 
             if (current[i] == STATE_ALIVE) {
 
@@ -85,13 +105,9 @@ public class LifeComputeJava
 
         this.mUsingPing = !this.mUsingPing;
 
-        if (this.mCallback != null) {
-            this.mCallback.onTickComplete();
-        }
-
     }
 
-    private int getNeighbourCellState(final int pNew) {
+    private int getAddFromNeighbour(final int pNew) {
 
         int index;
 
@@ -107,7 +123,7 @@ public class LifeComputeJava
     }
 
     @Override
-    protected synchronized void changeCellStateSafe(final int pCellPosition, final int pNewState) {
+    protected synchronized int changeCellStateInternal(final int pCellPosition, final int pNewState) {
 
         if (this.mUsingPing) {
             this.mCellStatesPing[pCellPosition] = pNewState;
@@ -115,20 +131,17 @@ public class LifeComputeJava
             this.mCellStatesPong[pCellPosition] = pNewState;
         }
 
-        if (this.mCallback != null) {
-            this.mCallback.onCellStateSwapped();
-        }
-
+        return pNewState;
     }
 
     @Override
-    protected synchronized int getCellStateSafe(final int pCellPosition) {
+    protected synchronized int getCellStateInternal(final int pCellPosition) {
         return this.mUsingPing ? this.mCellStatesPing[pCellPosition] : this.mCellStatesPong[pCellPosition];
     }
 
     @NonNull
     @Override
-    public synchronized int[] getCellStates() {
+    protected synchronized int[] getCellStates() {
         return this.mUsingPing ? this.mCellStatesPing : this.mCellStatesPong;
     }
 
@@ -138,12 +151,11 @@ public class LifeComputeJava
     }
 
     @Override
-    public void destroy() {
-        // nothing to destroy
+    protected synchronized void destroyInternal() {
     }
 
     @Override
-    public synchronized void clear() {
+    protected synchronized void clearInternal() {
 
         this.mStep = 0;
 

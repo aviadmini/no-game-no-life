@@ -17,7 +17,6 @@
         android:id="@+id/activity_main_tv_step"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/activity_main_tv_step_text"
         />
 
     <com.aviadmini.nogamenolife.views.LifeDrawView

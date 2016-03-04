@@ -7,7 +7,9 @@
     <string name="activity_main_btn_stop_text">Stop</string>
     <string name="activity_main_btn_start_text">Start</string>
     <string name="activity_main_tv_delay_text">Simulation delay</string>
-    <string name="activity_main_tv_step_text">Step</string>
     <string name="toast_simulation_online_cell_change">Cell state changed when simulation is online ~_~</string>
+    <string name="activity_main_menu_action_java_text">Java compute</string>
+    <string name="activity_main_menu_action_gl_text">OpenGL compute</string>
+    <string name="toast_implementation_changed">Game of Life compute implementation changed</string>
 
 </resources>
